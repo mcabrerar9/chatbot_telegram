@@ -9,10 +9,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(scanBasePackages = "com.chat.telegram_bot")
 @EnableJpaRepositories("com.chat.telegram_bot.repository")
 @EntityScan("com.chat.telegram_bot.model")
-
 public class TelegramBotApplication {   
     public static void main(String[] args) {
         SpringApplication.run(TelegramBotApplication.class, args);    
     }
 }
-

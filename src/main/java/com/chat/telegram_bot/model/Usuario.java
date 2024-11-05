@@ -6,7 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -17,10 +19,11 @@ public class Usuario {
     private String nombreUsuario;
     private String idChat;
 
+    // Constructor vacío requerido por JPA
     public Usuario() {
     }
-
-    // Constructor sin el id, solo con los campos requeridos
+      
+    // Constructor sin el campo 'id'
     public Usuario(String nombre, String nombreUsuario, String idChat) {
         this.nombre = nombre;
         this.nombreUsuario = nombreUsuario;

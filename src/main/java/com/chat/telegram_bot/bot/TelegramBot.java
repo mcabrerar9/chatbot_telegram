@@ -1,32 +1,31 @@
 
-package com.chat.telegram_bot.bot; 
- 
-import com.chat.telegram_bot.config.BotConfig; 
-import com.chat.telegram_bot.service.ChatGPTService; 
-import org.telegram.telegrambots.bots.TelegramLongPollingBot; 
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage; 
-import org.telegram.telegrambots.meta.api.objects.Update; 
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException; 
-import org.springframework.beans.factory.annotation.Autowired; 
-import org.springframework.stereotype.Component; 
+package com.chat.telegram_bot.bot;
 
- 
-import java.util.HashMap; 
-import java.util.Map; 
- 
-@Component 
-public class TelegramBot extends TelegramLongPollingBot { 
- 
-    @Autowired 
-    private BotConfig botConfig; 
- 
-    @Autowired 
-    private ChatGPTService chatGPTService; 
- 
-    private final Map<String, String> predefinedResponses; 
- 
-    public TelegramBot() { 
-        predefinedResponses = new HashMap<>(); 
+import com.chat.telegram_bot.config.BotConfig;
+import com.chat.telegram_bot.service.ChatGPTService;
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Component
+public class TelegramBot extends TelegramLongPollingBot {
+
+    @Autowired
+    private BotConfig botConfig;
+
+    @Autowired
+    private ChatGPTService chatGPTService;
+
+    private final Map<String, String> predefinedResponses;
+
+    public TelegramBot() {
+        predefinedResponses = new HashMap<>();
         predefinedResponses.put("hola", "¡Hola! ¿Cómo puedo ayudarte hoy?");
         predefinedResponses.put("¿cómo estás?", "Estoy aquí para ayudarte, ¡gracias por preguntar!");
         predefinedResponses.put("¿qué puedes hacer?", "Puedo responder preguntas y ayudarte con tus dudas.");
@@ -47,42 +46,42 @@ public class TelegramBot extends TelegramLongPollingBot {
         predefinedResponses.put("¿qué es la programación orientada a objetos?", "Es un paradigma que organiza el código en 'objetos' que representan conceptos o entidades.");
         predefinedResponses.put("¿qué significa API?", "API es la sigla de 'Interfaz de Programación de Aplicaciones', una forma en que los programas interactúan.");
         predefinedResponses.put("¿qué es el Big Data?", "Es el análisis y gestión de grandes volúmenes de datos para encontrar patrones y tendencias.");
-    } 
- 
-    @Override 
-    public String getBotToken() { 
-        return botConfig.getBotToken(); 
-    } 
- 
-    @Override 
-    public String getBotUsername() { 
-        return botConfig.getBotUsername(); 
-    } 
- 
-    @Override 
-    public void onUpdateReceived(Update update) { 
-        if (update.hasMessage() && update.getMessage().hasText()) { 
-            String messageText = update.getMessage().getText(); 
-            long chatId = update.getMessage().getChatId(); 
- 
-            String response = processMessage(messageText); 
- 
-            SendMessage message = new SendMessage(); 
-            message.setChatId(String.valueOf(chatId)); 
-            message.setText(response); 
- 
-            try { 
-                execute(message); 
-            } catch (TelegramApiException e) { 
-                e.printStackTrace(); 
-            } 
-        } 
-    } 
- 
-    private String processMessage(String messageText) { 
-        if (predefinedResponses.containsKey(messageText.toLowerCase())) { 
-            return predefinedResponses.get(messageText.toLowerCase()); 
-        } 
-        return chatGPTService.getChatGPTResponse(messageText); 
-    } 
+    }
+
+    @Override
+    public String getBotToken() {
+        return botConfig.getBotToken();
+    }
+
+    @Override
+    public String getBotUsername() {
+        return botConfig.getBotUsername();
+    }
+
+    @Override
+    public void onUpdateReceived(Update update) {
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            String messageText = update.getMessage().getText();
+            long chatId = update.getMessage().getChatId();
+
+            String response = processMessage(messageText);
+
+            SendMessage message = new SendMessage();
+            message.setChatId(String.valueOf(chatId));
+            message.setText(response);
+
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String processMessage(String messageText) {
+        if (predefinedResponses.containsKey(messageText.toLowerCase())) {
+            return predefinedResponses.get(messageText.toLowerCase());
+        }
+        return chatGPTService.getChatGPTResponse(messageText);
+    }
 }

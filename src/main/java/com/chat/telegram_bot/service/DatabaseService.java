@@ -3,9 +3,9 @@ package com.chat.telegram_bot.service;
 
 import com.chat.telegram_bot.model.MensajeChat;
 import com.chat.telegram_bot.model.Conversacion;
-import com.chat.telegram_bot.model.Relevancia;
 import com.chat.telegram_bot.model.Usuario;
 import com.chat.telegram_bot.model.TemaMensaje;
+import com.chat.telegram_bot.model.Relevancia;
 import com.chat.telegram_bot.repository.UsuarioRepository;
 import com.chat.telegram_bot.repository.MensajeChatRepository;
 import com.chat.telegram_bot.repository.ConversacionRepository;
@@ -41,22 +41,25 @@ public class DatabaseService {
     }
 
     // Método para guardar un mensaje en la base de datos
-    public MensajeChat saveMensaje(Long usuarioId, String textoMensaje, Long temaId, Long conversacionId, String relevancia) {
+    public MensajeChat saveMensaje(Long usuarioId, String textoMensaje, Long temaId, Long conversacionId, String relevanciaStr) {
         MensajeChat mensajeChat = new MensajeChat();
-        
-        // Busca entidades relacionadas
-        Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
-        TemaMensaje tema = temaMensajeRepository.findById(temaId).orElse(null);
-        Conversacion conversacion = conversacionRepository.findById(conversacionId).orElse(null);
-        
+
+        // Busca las entidades relacionadas
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + usuarioId));
+        TemaMensaje tema = temaMensajeRepository.findById(temaId)
+                .orElseThrow(() -> new RuntimeException("TemaMensaje no encontrado con ID: " + temaId));
+        Conversacion conversacion = conversacionRepository.findById(conversacionId)
+                .orElseThrow(() -> new RuntimeException("Conversacion no encontrada con ID: " + conversacionId));
+
         // Asigna valores y relaciones
         mensajeChat.setUsuario(usuario);
         mensajeChat.setTextoMensaje(textoMensaje);
         mensajeChat.setMarcaTiempo(LocalDateTime.now());
         mensajeChat.setTema(tema);
         mensajeChat.setConversacion(conversacion);
-        mensajeChat.setRelevancia(Relevancia.valueOf(relevancia.toUpperCase()));
-        
+        mensajeChat.setRelevancia(Relevancia.valueOf(relevanciaStr.toUpperCase()));
+
         mensajeChatRepository.save(mensajeChat);
         return mensajeChat;
     }

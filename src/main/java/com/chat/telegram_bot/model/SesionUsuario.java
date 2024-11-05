@@ -8,11 +8,12 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Table(name = "sesion_usuario")
 public class SesionUsuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
     private Long id;
+
     private LocalDateTime inicio;
     private LocalDateTime fin;
 
